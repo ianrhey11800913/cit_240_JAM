@@ -1,5 +1,7 @@
-// Load students
+// Load students on page load
 document.addEventListener("DOMContentLoaded", loadStudents);
+
+let editId = null; // store ID of student being edited
 
 function addStudent() {
   const name = document.getElementById("name").value;
@@ -40,28 +42,57 @@ function loadStudents() {
         <td>${s.name}</td>
         <td>${s.email}</td>
         <td>
-  <span class="action-btn action-edit" onclick="editStudent(${s.id})">Edit</span>
-  <span class="action-btn action-delete" onclick="deleteStudent(${s.id})">Delete</span>
-</td>
-
+          <span class="action-btn action-edit" onclick="openEditModal(${s.id})">Edit</span>
+          <span class="action-btn action-delete" onclick="deleteStudent(${s.id})">Delete</span>
+        </td>
       </tr>
     `;
   });
 }
 
-function editStudent(id) {
-  let list = JSON.parse(localStorage.getItem("students"));
+/* -------------------------
+   MODAL OPEN / CLOSE LOGIC
+--------------------------*/
 
+function openEditModal(id) {
+  let list = JSON.parse(localStorage.getItem("students"));
   const s = list.find(st => st.id === id);
-  const newName = prompt("New Name:", s.name);
-  const newEmail = prompt("New Email:", s.email);
+
+  editId = id;
+
+  document.getElementById("editName").value = s.name;
+  document.getElementById("editEmail").value = s.email;
+
+  document.getElementById("editModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("editModal").style.display = "none";
+}
+
+/* -------------------------
+   SAVE EDITED STUDENT
+--------------------------*/
+
+function saveEdit() {
+  const newName = document.getElementById("editName").value;
+  const newEmail = document.getElementById("editEmail").value;
+
+  let list = JSON.parse(localStorage.getItem("students"));
+  const s = list.find(st => st.id === editId);
 
   s.name = newName;
   s.email = newEmail;
 
   localStorage.setItem("students", JSON.stringify(list));
+
+  closeModal();
   loadStudents();
 }
+
+/* -------------------------
+   DELETE STUDENT
+--------------------------*/
 
 function deleteStudent(id) {
   let list = JSON.parse(localStorage.getItem("students"));
@@ -71,4 +102,3 @@ function deleteStudent(id) {
   localStorage.setItem("students", JSON.stringify(list));
   loadStudents();
 }
-
