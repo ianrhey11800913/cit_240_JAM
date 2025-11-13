@@ -40,9 +40,10 @@ function loadStudents() {
         <td>${s.name}</td>
         <td>${s.email}</td>
         <td>
-          <span class="action-btn" onclick="editStudent(${s.id})">Edit</span> |
-          <span class="action-btn" onclick="deleteStudent(${s.id})">Delete</span>
-        </td>
+  <span class="action-btn action-edit" onclick="editStudent(${s.id})">Edit</span>
+  <span class="action-btn action-delete" onclick="deleteStudent(${s.id})">Delete</span>
+</td>
+
       </tr>
     `;
   });
@@ -70,3 +71,4 @@ function deleteStudent(id) {
   localStorage.setItem("students", JSON.stringify(list));
   loadStudents();
 }
+
